@@ -1,11 +1,15 @@
-#coding:utf-8
-import binascii
-import struct
-crcbp = open("xxx.png","rb"). read()    #此处填上文件名
-for i in range(1024):
-    for j in range (1024):
-    data = crcbp[12:16] + struct.pack(' >i',i) + struct.pack(' >i',j) + crcbp[24:29]
-    crc32 = binascii.crc32(data) & 0xffffffff
-    if cr32 == 0x08ec7edb: #此处填上CRC值
-        print i,j
-        print "hex",hex(i),hex(j)
+import base64
+b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+with open("C:\\Users\陈长生\Desktop\\临时文件夹\\attachment\\tmp\近在眼前\\ComeOn!.txt", 'rb') as f:
+    flag = ''
+    bin_str = ''
+    for line in f.readlines():
+        stegb64 = str(line, "utf-8").strip("\n")
+        rowb64 = str(base64.b64encode(base64.b64decode(stegb64)), "utf-8").strip("\n")
+        offset = abs(b64chars.index(stegb64.replace('=', '')[-1]) - b64chars.index(rowb64.replace('=', '')[-1]))
+        equalnum = stegb64.count('=')  # no equalnum no offset
+        if equalnum:
+            bin_str += bin(offset)[2:].zfill(equalnum * 2)
+            # flag += chr(int(bin(offset)[2:].zfill(equalnum * 2), 2))
+            # print(flag) 这样写得不出正确结果
+        print([chr(int(bin_str[i:i + 8], 2)) for i in range(0, len(bin_str), 8)])
