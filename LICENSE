@@ -1,15 +1,12 @@
-import base64
-b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-with open("C:\\Users\陈长生\Desktop\\临时文件夹\\attachment\\tmp\近在眼前\\ComeOn!.txt", 'rb') as f:
-    flag = ''
-    bin_str = ''
-    for line in f.readlines():
-        stegb64 = str(line, "utf-8").strip("\n")
-        rowb64 = str(base64.b64encode(base64.b64decode(stegb64)), "utf-8").strip("\n")
-        offset = abs(b64chars.index(stegb64.replace('=', '')[-1]) - b64chars.index(rowb64.replace('=', '')[-1]))
-        equalnum = stegb64.count('=')  # no equalnum no offset
-        if equalnum:
-            bin_str += bin(offset)[2:].zfill(equalnum * 2)
-            # flag += chr(int(bin(offset)[2:].zfill(equalnum * 2), 2))
-            # print(flag) 这样写得不出正确结果
-        print([chr(int(bin_str[i:i + 8], 2)) for i in range(0, len(bin_str), 8)])
+def decimal_to_ascii(input_string):
+    # Splitting the input string by spaces to filter them out
+    parts = input_string.split()
+    # Converting each part to an integer and then to its corresponding ASCII character
+    ascii_chars = [chr(int(part)) for part in parts if part.isdigit()]
+    # Joining all ASCII characters into a single string
+    return ''.join(ascii_chars)
+
+# Example usage:
+input_numbers = "102 108 97 103 123 52 55 101 100 98 56 51 48  48 101 100 53 102 57 98 50 56 102 99 53 52 98 48 100 48 57 101 99 100 101 102 55 125"
+result = decimal_to_ascii(input_numbers)
+print(result)  # Output will be 'ABCD', space (ASCII 32) is ignored
